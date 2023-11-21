@@ -1,10 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "auctions/layout.html" %}
 
-</body>
-</html>
+{% block body %}
+            <div class="container">
+                {% if message %}
+                    {% if update %}
+                        <div class="alert alert-success" role="alert">
+                            {{message}}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger" role="alert">
+                            {{message}}
+                        </div>
+                    {% endif %}
+                    
+                {% endif %}
+            </div>
+            
+            {% if not listing.isActive and user == listing.price.user %}
+            <div class="row mx-3">
+            
+                <div class="alert alert-danger" role="alert">
+                    Congratulations You won the auction!
+                </div>
+                {% endif %}
+            {% if user.is_authenticated and listing.isActive == True%} 
+                    {% if isOwner %}
+                        <form action="{% url 'endAuction' id=listing.id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-danger mx-3" type="submit" >Close Auction</button>
+                        </form>
+                    {% endif %}
+
+                        {% if isListingInWishlist %}
+                                <form action="{% url 'remove' id=listing.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="btn btn-danger mx-3" type="submit" >Remove from wishlist</button>
+                                </form>
+                        {%else%}
+                                <form action="{% url 'add' id=listing.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="btn btn-success mx-3" type="submit" >Add to wishlist</button>
+                                </form>
+                        {% endif %} 
+                {% endif %}
+            </div>
+            <h2>{{listing.title}}</h2>
+            <img src="{{listing.imageUrl}}" height="400px">
+            <p>{{listing.description}}</p>
+            <p>Owner: {{listing.owner}}</p>
+            <h6>$:{{listing.price.bid}}</h6>
+            {{listing.price}}
+            {% if user.is_authenticated%}
+            <form action="{% url 'addBid' id=listing.id  %}" method="POST">
+                {% csrf_token %}
+                <div class="row mx-3">
+                <input type="number" min="0" name="newBid" placeholder="Add Bid">
+                <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+                <p>{{message}}</p>
+            </form>
+            {% endif %}
+
+            <div >
+                <h2>Comments</h2>
+                
+                {% if user.is_authenticated%}
+                <form action="{% url 'addcomment' id=listing.id  %}" method="POST">
+                    {% csrf_token %}
+                    <div class="row mx-3">
+                    <input type="text" name="newComment" placeholder="Add New Comment">
+                    <button type="submit" class="btn btn-warning">Add </button>
+                    </div>
+                </form>
+                {% endif %}
+                {{message}}
+            </div>
+            <br>
+            {{comments}}
+            <ul class="list-group">
+            {% for comments in allComments %}
+        
+                <li class="list-group-item">{{comments.message}}</li>
+                <p>Posted by: {{comments.author}}</p>
+                
+            {% endfor %}
+            </ul>
+
+{% endblock %}
+

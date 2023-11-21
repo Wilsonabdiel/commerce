@@ -1,0 +1,85 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Create Listings</h2>
+{% comment %} {{category}} {% endcomment %}
+{{categoryData}}
+    <form action="{% url 'create' %}" method="POST">
+        {% csrf_token %}
+        {% comment %} {{ form }} {% endcomment %}
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input name="title" type="text" class="form-control" id="title" placeholder="Enter Title">
+           
+          </div>
+          <div class="form-group">
+            <label for="descrition">Description</label>
+            <input name="description" type="text" class="form-control" id="description" placeholder="Enter Description">
+           
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Image Url</label>
+            <input name="imageUrl" type="text" class="form-control" id="imageUrl" placeholder="Image Url">
+           
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input name="price" type="number" min="0" class="form-control" id="price" placeholder="Enter Price">
+           
+          </div>
+          <div class="form-group">
+            <label for="category">Choose a category</label>
+            <select name="category" class="form-select" aria-label="Default select example" id="category">
+                <option selected>Category</option>
+                {% for cate in category %}
+                <option value="{{cate}}">{{cate}}</option>
+                {% endfor %}
+              
+
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success">Create Listing</button>
+    </form>
+{% endblock %}{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Create Listings</h2>
+{% comment %} {{category}} {% endcomment %}
+{{categoryData}}
+    <form action="{% url 'create' %}" method="POST">
+        {% csrf_token %}
+        {% comment %} {{ form }} {% endcomment %}
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input name="title" type="text" class="form-control" id="title" placeholder="Enter Title">
+
+          </div>
+          <div class="form-group">
+            <label for="descrition">Description</label>
+            <input name="description" type="text" class="form-control" id="description" placeholder="Enter Description">
+
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Image Url</label>
+            <input name="imageUrl" type="text" class="form-control" id="imageUrl" placeholder="Image Url">
+
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input name="price" type="number" min="0" class="form-control" id="price" placeholder="Enter Price">
+
+          </div>
+          <div class="form-group">
+            <label for="category">Choose a category</label>
+            <select name="category" class="form-select" aria-label="Default select example" id="category">
+                <option selected>Category</option>
+                {% for cate in category %}
+                <option value="{{cate}}">{{cate}}</option>
+                {% endfor %}
+
+
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success">Create Listing</button>
+    </form>
+{% endblock %}
