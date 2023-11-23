@@ -1,3 +1,19 @@
 body {
     padding: 10px;
 }
+.bood{
+   margin: 0;
+            padding: 0;
+            height: 100vh; /* 100% of the viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+}
+
+.createform{
+    width: 500px;
+
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+}

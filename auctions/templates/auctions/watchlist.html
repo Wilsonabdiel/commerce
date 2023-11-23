@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    {% for listing in watchlist_listings %}
+    <h2>{{ listing.title }}</h2>
+    <p>{{ listing.description }}</p>
+    <p>Current Price: {{ listing.current_price }}</p>
+    {% if listing.image_url %}
+        <img src="{{ listing.image_url }}" alt="{{ listing.title }}">
+    {% endif %}
+    <a href="{% url 'listing_detail' listing_id=listing.id %}">View Listing</a>
+{% endfor %}
+
+
+{% endblock %}

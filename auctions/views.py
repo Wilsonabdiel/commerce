@@ -31,6 +31,35 @@ def all_active_listings(request):
 
     return render(request, 'auctions/index.html', context)
 
+
+@login_required
+
+def watchlist(request):
+    watchlist_listings = request.user.watchlist.all()
+
+    context = {
+        'watchlist_listings': watchlist_listings
+    }
+
+    return render(request, 'auctions/watchlist.html', context)
+
+def categories(request):
+    # categories = CATEGORIES GEt Categories
+    selected_category = request.GET.get('category', None)
+
+    if selected_category:
+        active_listings = AuctionListing.objects.filter(end_time__gt=datetime.datetime.now(), category=selected_category)
+    else:
+        active_listings = AuctionListing.objects.filter(end_time__gt=datetime.datetime.now())
+
+    context = {
+        'categories': categories,
+        'selected_category': selected_category,
+        'active_listings': active_listings
+    }
+
+    return render(request, 'auctions/categories.html', context)
+
 @login_required
 def create_listing(request):
 
