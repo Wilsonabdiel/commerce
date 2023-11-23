@@ -1,0 +1,74 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    {% if user.is_authenticated %}
+        {% if listing.user == user %}
+            {% if listing.end_time > now %}
+                <button>Close Auction</button>
+            {% else %}
+                <p>Auction is closed.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if listing.end_time <= now %}
+            {% if listing.bids.filter(is_winning=True).first.bidder == user %}
+                <p>Congratulations! You are the winning bidder!</p>
+            {% endif %}
+             {% if listing.bids.filter(is_winning=False).first.bidder !== user %}
+                <p>Sorry! You lost the bid!</p>
+            {% endif %}
+        {% endif %}
+{#    {% endif %}#}
+
+{#    {% if user.is_authenticated %}#}
+        {% if listing in user.watchlist %}
+            <p>Already in Watchlist</p>
+            <button>Remove from Watchlist</button>
+        {% else %}
+            <p>Add to Watchlist</p>
+            <button>Add to Watchlist</button>
+        {% endif %}
+    {% endif %}
+
+    <h2>{{ listing.title }}</h2>
+    <p>{{ listing.description }}</p>
+    <p>Current Price: {{ listing.current_price }}</p>
+    {% if listing.image_url %}
+        <img src="{{ listing.image_url }}" alt="{{ listing.title }}">
+    {% endif %}
+    <p>End Time: {{ listing.end_time }}</p>
+
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'add_comment' listing.id %}">
+            {% csrf_token %}
+            <label for="comment">Add a Comment:</label>
+            <textarea id="comment" name="comment" rows="4" cols="50" required></textarea>
+            <input type="submit" value="Add Comment">
+        </form>
+    {% endif %}
+
+    <h3>Comments:</h3>
+    <ul>
+        {% for comment in listing.comments.all %}
+            <li><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            <label for="bid_amount">Bid Amount:</label>
+            <input type="number" id="bid_amount" name="bid_amount" min="{{ listing.starting_bid }}">
+            <input type="submit" value="Place Bid">
+            {% if form.errors %}
+                <ul class="errors">
+                    {% for error in form.errors %}
+                        <li>{{ error.message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </form>
+    {% endif %}
+
+{% endblock %}
